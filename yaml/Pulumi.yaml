@@ -1,0 +1,28 @@
+name: crossfit-workout-timer
+runtime: yaml
+description: A minimal AWS Pulumi YAML program
+variables:
+  readme:
+    Fn::ReadFile: ./Pulumi.README.md
+resources:
+  bucket:
+    type: aws:s3:Bucket
+    properties:
+      website:
+        indexDocument: index.html
+  index.html:
+    type: aws:s3:BucketObject
+    properties:
+      bucket: ${bucket.id}
+      content: |
+          <div>
+            <iframe src="https://app.wodify.com/SignIn/Login" frameborder="0" scrolling="yes" width="50%" height="100%" align="left" style="height:100%;width:50%;float:left; overflow: hidden"></iframe>
+          </div>
+          <div>
+            <iframe src="https://timer.crosshero.com" frameborder="0" scrolling="yes" width="50%" height="100%" align="right" style="overflow:hidden; height: 100%; width:50%"></iframe>
+          </div>
+      contentType: text/html
+      acl: public-read
+outputs:
+  url: http://${bucket.websiteEndpoint}
+  readme: ${readme}
